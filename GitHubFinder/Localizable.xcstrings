@@ -504,6 +504,12 @@
             "state" : "translated",
             "value" : "GitHub Finder"
           }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GitHub Finder"
+          }
         }
       }
     },
