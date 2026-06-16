@@ -26,8 +26,8 @@ func waitUntil(
 extension Search.ViewModel.State {
     var isIdle: Bool { if case .idle = self { true } else { false } }
     var isLoading: Bool { if case .loading = self { true } else { false } }
+    var isLoaded: Bool { if case .loaded = self { true } else { false } }
     var isEmpty: Bool { if case .empty = self { true } else { false } }
-    var users: [GitHubUser]? { if case .loaded(let users) = self { users } else { nil } }
     var failureMessage: String? { if case .failed(let message) = self { message } else { nil } }
 }
 

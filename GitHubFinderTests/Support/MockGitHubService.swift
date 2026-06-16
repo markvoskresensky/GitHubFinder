@@ -9,16 +9,22 @@ import Foundation
 @testable import GitHubFinder
 
 final class MockGitHubService: GitHubServicing, @unchecked Sendable {
-    var searchUsersResult: Result<[GitHubUser], Error> = .success([])
+    var searchUsersResult: Result<SearchUsersPage, Error> = .success(SearchUsersPage(users: [], hasMore: false))
+    var searchUsersHandler: (@Sendable (String, Int) -> Result<SearchUsersPage, Error>)?
     var userResult: Result<UserDetail, Error> = .success(TestData.userDetail())
     var repositoriesResult: Result<[Repository], Error> = .success([])
 
     private(set) var searchUsersQueries: [String] = []
+    private(set) var requestedPages: [Int] = []
     private(set) var requestedUserLogins: [String] = []
     private(set) var requestedRepoLogins: [String] = []
 
-    func searchUsers(query: String) async throws -> [GitHubUser] {
+    func searchUsers(query: String, page: Int) async throws -> SearchUsersPage {
         searchUsersQueries.append(query)
+        requestedPages.append(page)
+        if let handler = searchUsersHandler {
+            return try handler(query, page).get()
+        }
         return try searchUsersResult.get()
     }
 

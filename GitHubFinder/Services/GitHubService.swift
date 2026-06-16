@@ -7,8 +7,13 @@
 
 import Foundation
 
+struct SearchUsersPage: Sendable {
+    let users: [GitHubUser]
+    let hasMore: Bool
+}
+
 protocol GitHubServicing: Sendable {
-    func searchUsers(query: String) async throws -> [GitHubUser]
+    func searchUsers(query: String, page: Int) async throws -> SearchUsersPage
     func user(login: String) async throws -> UserDetail
     func repositories(login: String) async throws -> [Repository]
 }
@@ -40,22 +45,27 @@ struct GitHubService: GitHubServicing {
     private let session: URLSession
     private let tokenStore: TokenStoring
     private let baseURL = URL(string: "https://api.github.com")!
+    private let perPage = 30
+    private let maxSearchResults = 1000
 
     init(session: URLSession = .shared, tokenStore: TokenStoring) {
         self.session = session
         self.tokenStore = tokenStore
     }
 
-    func searchUsers(query: String) async throws -> [GitHubUser] {
+    func searchUsers(query: String, page: Int) async throws -> SearchUsersPage {
         var components = URLComponents(url: baseURL.appendingPathComponent("search/users"),
                                        resolvingAgainstBaseURL: false)!
         components.queryItems = [
             URLQueryItem(name: "q", value: query),
-            URLQueryItem(name: "per_page", value: "30")
+            URLQueryItem(name: "per_page", value: "\(perPage)"),
+            URLQueryItem(name: "page", value: "\(page)")
         ]
         guard let url = components.url else { throw GitHubError.network }
         let response: SearchUsersResponse = try await get(url)
-        return response.items
+        let available = min(response.totalCount, maxSearchResults)
+        let hasMore = page * perPage < available
+        return SearchUsersPage(users: response.items, hasMore: hasMore)
     }
 
     func user(login: String) async throws -> UserDetail {
@@ -77,7 +87,13 @@ struct GitHubService: GitHubServicing {
 
 private extension GitHubService {
     struct SearchUsersResponse: Decodable {
+        let totalCount: Int
         let items: [GitHubUser]
+
+        enum CodingKeys: String, CodingKey {
+            case totalCount = "total_count"
+            case items
+        }
     }
 
     func get<T: Decodable>(_ url: URL) async throws -> T {

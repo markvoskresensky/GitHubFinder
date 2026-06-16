@@ -50,8 +50,8 @@ private extension Search.Screen {
         case .loading:
             ProgressView()
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-        case .loaded(let users):
-            list(users)
+        case .loaded:
+            list
         case .empty:
             ContentUnavailableView.search
         case .failed(let message):
@@ -59,10 +59,22 @@ private extension Search.Screen {
         }
     }
 
-    func list(_ users: [GitHubUser]) -> some View {
-        List(users) { user in
-            NavigationLink(value: user) {
-                Search.UserRow(user: user)
+    var list: some View {
+        List {
+            ForEach(model.users) { user in
+                NavigationLink(value: user) {
+                    Search.UserRow(user: user)
+                }
+                .onAppear { model.loadMoreIfNeeded(currentItem: user) }
+            }
+
+            if model.isLoadingMore {
+                HStack {
+                    Spacer()
+                    ProgressView()
+                    Spacer()
+                }
+                .listRowSeparator(.hidden)
             }
         }
         .listStyle(.plain)
