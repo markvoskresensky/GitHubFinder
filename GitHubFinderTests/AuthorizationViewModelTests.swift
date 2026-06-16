@@ -13,7 +13,7 @@ import Foundation
 @Suite("Authorization.ViewModel")
 struct AuthorizationViewModelTests {
 
-    @Test("Начальное состояние — idle")
+    @Test("Initial state is idle")
     func initialStateIsIdle() {
         let model = Authorization.ViewModel(
             service: MockGitHubAuthService(),
@@ -23,7 +23,7 @@ struct AuthorizationViewModelTests {
         #expect(model.state.isIdle)
     }
 
-    @Test("Успешный вход → authorized, токен сохранён, колбэк вызван")
+    @Test("Successful sign-in → authorized, token saved, callback invoked")
     func successfulSignInSavesTokenAndNotifies() async throws {
         let service = MockGitHubAuthService()
         service.tokenResult = .success("gho_abc123")
@@ -42,7 +42,7 @@ struct AuthorizationViewModelTests {
         #expect(didNotify)
     }
 
-    @Test("Во время ожидания показывается код пользователя")
+    @Test("User code is shown while waiting")
     func showsUserCodeWhileWaiting() async throws {
         let service = MockGitHubAuthService()
         service.deviceCodeResult = .success(
@@ -67,7 +67,7 @@ struct AuthorizationViewModelTests {
         #expect(model.state.waitingUserCode == "ABCD-1234")
     }
 
-    @Test("Отмена возвращает в idle")
+    @Test("Cancel returns to idle")
     func cancelReturnsToIdle() async throws {
         let service = MockGitHubAuthService()
         service.hangOnPoll = true
@@ -84,7 +84,7 @@ struct AuthorizationViewModelTests {
         #expect(model.state.isIdle)
     }
 
-    @Test("Ошибка запроса кода → failed, токен не сохранён")
+    @Test("Device code error → failed, token not saved")
     func deviceCodeFailureGivesFailed() async throws {
         let service = MockGitHubAuthService()
         service.deviceCodeResult = .failure(GitHubAuthError.deviceFlowDisabled)
@@ -102,7 +102,7 @@ struct AuthorizationViewModelTests {
         #expect(store.savedToken == nil)
     }
 
-    @Test("Ошибка опроса токена → failed, токен не сохранён")
+    @Test("Token polling error → failed, token not saved")
     func pollFailureGivesFailed() async throws {
         let service = MockGitHubAuthService()
         service.tokenResult = .failure(GitHubAuthError.accessDenied)

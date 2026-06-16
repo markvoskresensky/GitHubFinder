@@ -13,13 +13,13 @@ import Foundation
 @Suite("Search.ViewModel")
 struct SearchViewModelTests {
 
-    @Test("Начальное состояние — idle")
+    @Test("Initial state is idle")
     func initialStateIsIdle() {
         let model = Search.ViewModel(service: MockGitHubService(), onSignOut: {})
         #expect(model.state.isIdle)
     }
 
-    @Test("Пустой запрос не запускает поиск и оставляет idle")
+    @Test("Empty query does not search and stays idle")
     func emptyQueryDoesNotSearch() async throws {
         let service = MockGitHubService()
         let model = Search.ViewModel(service: service, onSignOut: {})
@@ -32,7 +32,7 @@ struct SearchViewModelTests {
         #expect(service.searchUsersQueries.isEmpty)
     }
 
-    @Test("Успешный поиск с результатами → loaded")
+    @Test("Successful search with results → loaded")
     func successfulSearchLoadsUsers() async throws {
         let service = MockGitHubService()
         service.searchUsersResult = .success(
@@ -53,7 +53,7 @@ struct SearchViewModelTests {
         #expect(service.requestedPages == [1])
     }
 
-    @Test("Поиск без результатов → empty")
+    @Test("Search with no results → empty")
     func emptyResultsGiveEmptyState() async throws {
         let service = MockGitHubService()
         service.searchUsersResult = .success(SearchUsersPage(users: [], hasMore: false))
@@ -66,7 +66,7 @@ struct SearchViewModelTests {
         #expect(model.state.isEmpty)
     }
 
-    @Test("Ошибка сети → failed с человекочитаемым сообщением")
+    @Test("Network error → failed with a readable message")
     func failureGivesFailedState() async throws {
         let service = MockGitHubService()
         service.searchUsersResult = .failure(GitHubError.rateLimited)
@@ -79,7 +79,7 @@ struct SearchViewModelTests {
         #expect(model.state.failureMessage == GitHubError.rateLimited.errorDescription)
     }
 
-    @Test("Запрос обрезается от пробелов перед отправкой")
+    @Test("Query is trimmed before sending")
     func queryIsTrimmed() async throws {
         let service = MockGitHubService()
         service.searchUsersResult = .success(SearchUsersPage(users: [TestData.user()], hasMore: false))
@@ -92,7 +92,7 @@ struct SearchViewModelTests {
         #expect(service.searchUsersQueries == ["octocat"])
     }
 
-    @Test("Догрузка следующей страницы добавляет пользователей")
+    @Test("Loading the next page appends users")
     func loadMoreAppendsNextPage() async throws {
         let service = MockGitHubService()
         service.searchUsersHandler = { _, page in
@@ -117,7 +117,7 @@ struct SearchViewModelTests {
         #expect(service.requestedPages == [1, 2])
     }
 
-    @Test("Догрузки нет, когда страниц больше нет")
+    @Test("No further loading when there are no more pages")
     func doesNotLoadMoreWhenNoMorePages() async throws {
         let service = MockGitHubService()
         service.searchUsersResult = .success(SearchUsersPage(users: [TestData.user(id: 1, login: "u1")], hasMore: false))
@@ -133,7 +133,7 @@ struct SearchViewModelTests {
         #expect(service.requestedPages == [1])
     }
 
-    @Test("401 при поиске → onSignOut")
+    @Test("401 during search → onSignOut")
     func unauthorizedTriggersSignOut() async throws {
         let service = MockGitHubService()
         service.searchUsersResult = .failure(GitHubError.unauthorized)

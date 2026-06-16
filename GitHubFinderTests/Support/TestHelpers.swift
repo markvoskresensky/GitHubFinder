@@ -16,7 +16,7 @@ func waitUntil(
     let deadline = ContinuousClock.now.advanced(by: timeout)
     while !condition() {
         if ContinuousClock.now >= deadline {
-            Issue.record("Истёк таймаут ожидания условия")
+            Issue.record("Timed out waiting for condition")
             return
         }
         try await Task.sleep(for: .milliseconds(5))

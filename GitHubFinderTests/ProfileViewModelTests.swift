@@ -13,7 +13,7 @@ import Foundation
 @Suite("Profile.ViewModel")
 struct ProfileViewModelTests {
 
-    @Test("Успешная загрузка → loaded с профилем и репозиториями")
+    @Test("Successful load → loaded with profile and repositories")
     func loadsProfileAndRepositories() async {
         let service = MockGitHubService()
         service.userResult = .success(TestData.userDetail(login: "octocat", followers: 42))
@@ -33,7 +33,7 @@ struct ProfileViewModelTests {
         #expect(service.requestedRepoPages == [1])
     }
 
-    @Test("Порядок репозиториев сохраняется как с сервера")
+    @Test("Repository order is preserved as returned by the server")
     func keepsServerOrder() async {
         let service = MockGitHubService()
         service.repositoriesResult = .success(
@@ -53,7 +53,7 @@ struct ProfileViewModelTests {
         #expect(model.repositories.map(\.name) == ["first", "second", "third"])
     }
 
-    @Test("Догрузка следующей страницы добавляет репозитории")
+    @Test("Loading the next page appends repositories")
     func loadMoreAppendsNextPage() async throws {
         let service = MockGitHubService()
         service.repositoriesHandler = { _, page in
@@ -76,7 +76,7 @@ struct ProfileViewModelTests {
         #expect(service.requestedRepoPages == [1, 2])
     }
 
-    @Test("Догрузки нет, когда страниц больше нет")
+    @Test("No further loading when there are no more pages")
     func doesNotLoadMoreWhenNoMorePages() async throws {
         let service = MockGitHubService()
         service.repositoriesResult = .success(
@@ -91,7 +91,7 @@ struct ProfileViewModelTests {
         #expect(service.requestedRepoPages == [1])
     }
 
-    @Test("Ошибка загрузки → failed с человекочитаемым сообщением")
+    @Test("Load error → failed with a readable message")
     func failureGivesFailedState() async {
         let service = MockGitHubService()
         service.userResult = .failure(GitHubError.notFound)
@@ -102,7 +102,7 @@ struct ProfileViewModelTests {
         #expect(model.state.failureMessage == GitHubError.notFound.errorDescription)
     }
 
-    @Test("login прокидывается в сервис")
+    @Test("login is passed to the service")
     func passesLoginToService() async {
         let service = MockGitHubService()
         let model = Profile.ViewModel(login: "torvalds", service: service, onUnauthorized: {})
@@ -113,7 +113,7 @@ struct ProfileViewModelTests {
         #expect(service.requestedUserLogins == ["torvalds"])
     }
 
-    @Test("401 при загрузке → onUnauthorized")
+    @Test("401 during load → onUnauthorized")
     func unauthorizedTriggersSignOut() async {
         let service = MockGitHubService()
         service.userResult = .failure(GitHubError.unauthorized)

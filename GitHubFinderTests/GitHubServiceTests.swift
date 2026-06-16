@@ -12,7 +12,7 @@ import Foundation
 @Suite("GitHubService", .serialized)
 struct GitHubServiceTests {
 
-    @Test("Добавляет заголовок Authorization, когда есть токен")
+    @Test("Adds Authorization header when a token is present")
     func setsAuthorizationHeaderWhenTokenPresent() async throws {
         let store = MockTokenStore()
         store.save("gho_secret")
@@ -24,7 +24,7 @@ struct GitHubServiceTests {
         #expect(MockURLProtocol.lastRequest?.value(forHTTPHeaderField: "Authorization") == "Bearer gho_secret")
     }
 
-    @Test("Без токена заголовок Authorization не ставится")
+    @Test("No Authorization header without a token")
     func omitsAuthorizationHeaderWithoutToken() async throws {
         MockURLProtocol.requestHandler = { _ in (httpResponse(status: 200), Data(#"{"total_count":0,"items":[]}"#.utf8)) }
         let service = GitHubService(session: .stubbed(), tokenStore: MockTokenStore())
@@ -34,7 +34,7 @@ struct GitHubServiceTests {
         #expect(MockURLProtocol.lastRequest?.value(forHTTPHeaderField: "Authorization") == nil)
     }
 
-    @Test("searchUsers парсит результаты и определяет hasMore")
+    @Test("searchUsers parses results and computes hasMore")
     func searchUsersParsesItems() async throws {
         let json = #"{"total_count":50,"items":[{"id":1,"login":"octocat","avatar_url":"https://example.com/a.png","html_url":"https://github.com/octocat"}]}"#
         MockURLProtocol.requestHandler = { _ in (httpResponse(status: 200), Data(json.utf8)) }
@@ -46,7 +46,7 @@ struct GitHubServiceTests {
         #expect(result.hasMore)
     }
 
-    @Test("user парсит профиль")
+    @Test("user parses the profile")
     func userParsesProfile() async throws {
         let json = #"{"id":1,"login":"octocat","public_repos":5,"followers":10,"following":2}"#
         MockURLProtocol.requestHandler = { _ in (httpResponse(status: 200), Data(json.utf8)) }

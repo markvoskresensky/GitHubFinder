@@ -12,7 +12,7 @@ import Testing
 @Suite("Root.ViewModel")
 struct RootViewModelTests {
 
-    @Test("Есть токен при старте → authorized")
+    @Test("Token present at start → authorized")
     func authorizedWhenTokenExists() {
         let store = MockTokenStore()
         store.save("gho_existing")
@@ -21,14 +21,14 @@ struct RootViewModelTests {
         #expect(model.isAuthorized)
     }
 
-    @Test("Нет токена при старте → не authorized")
+    @Test("No token at start → not authorized")
     func notAuthorizedWithoutToken() {
         let model = Root.ViewModel(tokenStore: MockTokenStore())
 
         #expect(!model.isAuthorized)
     }
 
-    @Test("didAuthorize переключает в authorized")
+    @Test("didAuthorize switches to authorized")
     func didAuthorizeFlips() {
         let model = Root.ViewModel(tokenStore: MockTokenStore())
 
@@ -37,7 +37,7 @@ struct RootViewModelTests {
         #expect(model.isAuthorized)
     }
 
-    @Test("signOut сбрасывает флаг и удаляет токен")
+    @Test("signOut clears the flag and deletes the token")
     func signOutClearsToken() {
         let store = MockTokenStore()
         store.save("gho_existing")
