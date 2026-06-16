@@ -6,10 +6,6 @@
 	objectVersion = 77;
 	objects = {
 
-/* Begin PBXBuildFile section */
-		AD3224922FE14817008C3CF9 /* SwiftLintBuildToolPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = 5117A70000000000000000A2 /* SwiftLintBuildToolPlugin */; };
-/* End PBXBuildFile section */
-
 /* Begin PBXContainerItemProxy section */
 		AD3223332FE07549008C3CF9 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -56,7 +52,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AD3224922FE14817008C3CF9 /* SwiftLintBuildToolPlugin in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -117,7 +112,6 @@
 			);
 			name = GitHubFinder;
 			packageProductDependencies = (
-				5117A70000000000000000A2 /* SwiftLintBuildToolPlugin */,
 			);
 			productName = GitHubFinder;
 			productReference = AD3223252FE07548008C3CF9 /* GitHubFinder.app */;
@@ -202,9 +196,6 @@
 			);
 			mainGroup = AD32231C2FE07548008C3CF9;
 			minimizedProjectReferenceProxies = 1;
-			packageReferences = (
-				5117A70000000000000000A1 /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */,
-			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = AD3223262FE07548008C3CF9 /* Products */;
 			projectDirPath = "";
@@ -584,25 +575,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		5117A70000000000000000A1 /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/SimplyDanny/SwiftLintPlugins";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.57.0;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		5117A70000000000000000A2 /* SwiftLintBuildToolPlugin */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 5117A70000000000000000A1 /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */;
-			productName = "plugin:SwiftLintBuildToolPlugin";
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = AD32231D2FE07548008C3CF9 /* Project object */;
 }
