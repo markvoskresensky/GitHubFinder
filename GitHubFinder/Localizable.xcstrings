@@ -7,6 +7,16 @@
     "%lld" : {
 
     },
+    "Authorization" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Авторизация"
+          }
+        }
+      }
+    },
     "Couldn't load profile" : {
       "localizations" : {
         "ru" : {
