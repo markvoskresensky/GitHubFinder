@@ -11,7 +11,7 @@ enum Authorization {}
 
 extension Authorization {
     static func view() -> some View {
-        let model = ViewModel()
+        let model = ViewModel(service: GitHubAuthService(), tokenStore: TokenStore())
         return Authorization.Screen(model: model)
     }
 }

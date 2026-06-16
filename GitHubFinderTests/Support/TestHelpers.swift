@@ -36,3 +36,10 @@ extension Profile.ViewModel.State {
     var isLoaded: Bool { if case .loaded = self { true } else { false } }
     var failureMessage: String? { if case .failed(let message) = self { message } else { nil } }
 }
+
+extension Authorization.ViewModel.State {
+    var isIdle: Bool { if case .idle = self { true } else { false } }
+    var isAuthorized: Bool { if case .authorized = self { true } else { false } }
+    var waitingUserCode: String? { if case .waitingForUser(let code, _) = self { code } else { nil } }
+    var failureMessage: String? { if case .failed(let message) = self { message } else { nil } }
+}
