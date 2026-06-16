@@ -1,0 +1,185 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "@%@" : {
+
+    },
+    "%lld" : {
+
+    },
+    "Couldn't load profile" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не удалось загрузить профиль"
+          }
+        }
+      }
+    },
+    "Couldn't process the server response." : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не удалось обработать ответ сервера."
+          }
+        }
+      }
+    },
+    "Couldn't reach GitHub. Check your internet connection." : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не удалось связаться с GitHub. Проверьте подключение к интернету."
+          }
+        }
+      }
+    },
+    "Enter a GitHub username in the search bar." : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Введите имя пользователя GitHub в строке поиска."
+          }
+        }
+      }
+    },
+    "Find developers" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Найдите разработчиков"
+          }
+        }
+      }
+    },
+    "Followers" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Подписчики"
+          }
+        }
+      }
+    },
+    "Following" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Подписки"
+          }
+        }
+      }
+    },
+    "GitHub Finder" : {
+
+    },
+    "GitHub rate limit exceeded. Try again later." : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Превышен лимит запросов к GitHub. Попробуйте позже."
+          }
+        }
+      }
+    },
+    "GitHub server error (code %lld)." : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ошибка сервера GitHub (код %lld)."
+          }
+        }
+      }
+    },
+    "Open on GitHub" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Открыть на GitHub"
+          }
+        }
+      }
+    },
+    "Repositories" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Репозитории"
+          }
+        }
+      }
+    },
+    "Repositories (%lld)" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Репозитории (%lld)"
+          }
+        }
+      }
+    },
+    "Retry" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Повторить"
+          }
+        }
+      }
+    },
+    "Search users" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Поиск пользователей"
+          }
+        }
+      }
+    },
+    "Something went wrong" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Что-то пошло не так"
+          }
+        }
+      }
+    },
+    "This user has no public repositories." : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "У пользователя нет публичных репозиториев."
+          }
+        }
+      }
+    },
+    "User not found." : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Пользователь не найден."
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}
