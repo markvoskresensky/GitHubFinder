@@ -18,8 +18,8 @@ extension Search {
         var body: some View {
             NavigationStack {
                 content
-                    .navigationTitle("GitHub Finder")
-                    .searchable(text: $model.query, prompt: "Search users")
+                    .navigationTitle("search_screen_navigation_title")
+                    .searchable(text: $model.query, prompt: "search_screen_search_prompt")
                     .onSubmit(of: .search) { model.search() }
                     .onChange(of: model.query) { model.debouncedSearch() }
                     .navigationDestination(for: GitHubUser.self) { user in
@@ -27,7 +27,7 @@ extension Search {
                     }
                     .toolbar {
                         ToolbarItem(placement: .topBarTrailing) {
-                            Button("Sign out", systemImage: "rectangle.portrait.and.arrow.right") {
+                            Button("search_screen_sign_out_button", systemImage: "rectangle.portrait.and.arrow.right") {
                                 model.signOut()
                             }
                         }
@@ -43,9 +43,9 @@ private extension Search.Screen {
         switch model.state {
         case .idle:
             ContentUnavailableView(
-                "Find developers",
+                "search_screen_empty_view_title",
                 systemImage: "magnifyingglass",
-                description: Text("Enter a GitHub username in the search bar.")
+                description: Text("search_screen_empty_view_description")
             )
         case .loading:
             ProgressView()
@@ -82,11 +82,11 @@ private extension Search.Screen {
 
     func errorView(_ message: String) -> some View {
         ContentUnavailableView {
-            Label("Something went wrong", systemImage: "exclamationmark.triangle")
+            Label("search_screen_error_view_title", systemImage: "exclamationmark.triangle")
         } description: {
             Text(message)
         } actions: {
-            Button("Retry") { model.search() }
+            Button("search_screen_retry_button") { model.search() }
         }
     }
 }

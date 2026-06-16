@@ -33,13 +33,13 @@ enum GitHubAuthError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .network:
-            return String(localized: "Couldn't reach GitHub. Check your internet connection.")
+            return String(localized: "error_network_text")
         case .deviceFlowDisabled:
-            return String(localized: "Device Flow is disabled for this OAuth app.")
+            return String(localized: "error_device_flow_disabled_text")
         case .accessDenied:
-            return String(localized: "Authorization was cancelled.")
+            return String(localized: "error_authorization_cancelled_text")
         case .expiredToken:
-            return String(localized: "The code expired. Please try again.")
+            return String(localized: "error_code_expired_text")
         case .unexpected(let message):
             return message
         }

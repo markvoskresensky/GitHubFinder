@@ -1,34 +1,14 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "@%@" : {
-
-    },
-    "%lld" : {
-
-    },
-    "Authorization" : {
+    "authorization_screen_cancel_button" : {
       "localizations" : {
-        "ru" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Авторизация"
+            "value" : "Cancel"
           }
-        }
-      }
-    },
-    "Authorization was cancelled." : {
-      "localizations" : {
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Авторизация отменена."
-          }
-        }
-      }
-    },
-    "Cancel" : {
-      "localizations" : {
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -37,18 +17,14 @@
         }
       }
     },
-    "Device Flow is disabled for this OAuth app." : {
+    "authorization_screen_enter_code_text" : {
       "localizations" : {
-        "ru" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Device Flow отключён для этого OAuth-приложения."
+            "value" : "Enter this code on GitHub:"
           }
-        }
-      }
-    },
-    "Enter this code on GitHub:" : {
-      "localizations" : {
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -57,48 +33,14 @@
         }
       }
     },
-    "Open github.com/login/device" : {
+    "authorization_screen_error_view_title" : {
       "localizations" : {
-        "ru" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Открыть github.com/login/device"
+            "value" : "Sign-in failed"
           }
-        }
-      }
-    },
-    "Sign out" : {
-      "localizations" : {
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Выйти"
-          }
-        }
-      }
-    },
-    "Sign in with GitHub" : {
-      "localizations" : {
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Войти через GitHub"
-          }
-        }
-      }
-    },
-    "Sign in with your GitHub account to raise the rate limit and access more data." : {
-      "localizations" : {
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Войдите через аккаунт GitHub, чтобы поднять лимит запросов и получить доступ к большему количеству данных."
-          }
-        }
-      }
-    },
-    "Sign-in failed" : {
-      "localizations" : {
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -107,38 +49,78 @@
         }
       }
     },
-    "Signed in" : {
+    "authorization_screen_intro_text" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign in with your GitHub account to raise the rate limit and access more data."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Вы вошли"
+            "value" : "Войдите через аккаунт GitHub, чтобы поднять лимит запросов и получить доступ к большему количеству данных."
           }
         }
       }
     },
-    "The code expired. Please try again." : {
+    "authorization_screen_navigation_title" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Authorization"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Срок действия кода истёк. Попробуйте снова."
+            "value" : "Авторизация"
           }
         }
       }
     },
-    "Try again" : {
+    "authorization_screen_open_device_link" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open github.com/login/device"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Попробовать снова"
+            "value" : "Открыть github.com/login/device"
           }
         }
       }
     },
-    "You're authorized with GitHub." : {
+    "authorization_screen_sign_in_button" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign in with GitHub"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Войти через GitHub"
+          }
+        }
+      }
+    },
+    "authorization_screen_signed_in_text" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You're authorized with GitHub."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -147,28 +129,78 @@
         }
       }
     },
-    "Your GitHub session has expired. Please sign in again." : {
+    "authorization_screen_signed_in_title" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Signed in"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Сессия GitHub истекла. Войдите снова."
+            "value" : "Вы вошли"
           }
         }
       }
     },
-    "Couldn't load profile" : {
+    "authorization_screen_try_again_button" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Try again"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Не удалось загрузить профиль"
+            "value" : "Попробовать снова"
           }
         }
       }
     },
-    "Couldn't process the server response." : {
+    "error_authorization_cancelled_text" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Authorization was cancelled."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Авторизация отменена."
+          }
+        }
+      }
+    },
+    "error_code_expired_text" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The code expired. Please try again."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Срок действия кода истёк. Попробуйте снова."
+          }
+        }
+      }
+    },
+    "error_decoding_text" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couldn't process the server response."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -177,8 +209,30 @@
         }
       }
     },
-    "Couldn't reach GitHub. Check your internet connection." : {
+    "error_device_flow_disabled_text" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Device Flow is disabled for this OAuth app."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Device Flow отключён для этого OAuth-приложения."
+          }
+        }
+      }
+    },
+    "error_network_text" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couldn't reach GitHub. Check your internet connection."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -187,51 +241,14 @@
         }
       }
     },
-    "Enter a GitHub username in the search bar." : {
+    "error_rate_limit_text" : {
       "localizations" : {
-        "ru" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Введите имя пользователя GitHub в строке поиска."
+            "value" : "GitHub rate limit exceeded. Try again later."
           }
-        }
-      }
-    },
-    "Find developers" : {
-      "localizations" : {
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Найдите разработчиков"
-          }
-        }
-      }
-    },
-    "Followers" : {
-      "localizations" : {
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Подписчики"
-          }
-        }
-      }
-    },
-    "Following" : {
-      "localizations" : {
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Подписки"
-          }
-        }
-      }
-    },
-    "GitHub Finder" : {
-
-    },
-    "GitHub rate limit exceeded. Try again later." : {
-      "localizations" : {
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -240,8 +257,14 @@
         }
       }
     },
-    "GitHub server error (code %lld)." : {
+    "error_server_text" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GitHub server error (code %lld)."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -250,68 +273,62 @@
         }
       }
     },
-    "Open on GitHub" : {
+    "error_session_expired_text" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your GitHub session has expired. Please sign in again."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Открыть на GitHub"
+            "value" : "Сессия GitHub истекла. Войдите снова."
           }
         }
       }
     },
-    "Repositories" : {
+    "error_user_not_found_text" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "User not found."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Репозитории"
+            "value" : "Пользователь не найден."
           }
         }
       }
     },
-    "Repositories (%lld)" : {
+    "profile_screen_error_view_text" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couldn't load profile"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Репозитории (%lld)"
+            "value" : "Не удалось загрузить профиль"
           }
         }
       }
     },
-    "Retry" : {
+    "profile_screen_no_repositories_text" : {
       "localizations" : {
-        "ru" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Повторить"
+            "value" : "This user has no public repositories."
           }
-        }
-      }
-    },
-    "Search users" : {
-      "localizations" : {
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Поиск пользователей"
-          }
-        }
-      }
-    },
-    "Something went wrong" : {
-      "localizations" : {
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Что-то пошло не так"
-          }
-        }
-      }
-    },
-    "This user has no public repositories." : {
-      "localizations" : {
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -320,12 +337,220 @@
         }
       }
     },
-    "User not found." : {
+    "profile_screen_open_on_github_button" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open on GitHub"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Пользователь не найден."
+            "value" : "Открыть на GitHub"
+          }
+        }
+      }
+    },
+    "profile_screen_repositories_count_section_title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Repositories (%lld)"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Репозитории (%lld)"
+          }
+        }
+      }
+    },
+    "profile_screen_repositories_section_title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Repositories"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Репозитории"
+          }
+        }
+      }
+    },
+    "profile_screen_retry_button" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Retry"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Повторить"
+          }
+        }
+      }
+    },
+    "profile_screen_stat_followers_title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Followers"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Подписчики"
+          }
+        }
+      }
+    },
+    "profile_screen_stat_following_title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Following"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Подписки"
+          }
+        }
+      }
+    },
+    "profile_screen_stat_repositories_title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Repositories"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Репозитории"
+          }
+        }
+      }
+    },
+    "search_screen_empty_view_description" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter a GitHub username in the search bar."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Введите имя пользователя GitHub в строке поиска."
+          }
+        }
+      }
+    },
+    "search_screen_empty_view_title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Find developers"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Найдите разработчиков"
+          }
+        }
+      }
+    },
+    "search_screen_error_view_title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Something went wrong"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Что-то пошло не так"
+          }
+        }
+      }
+    },
+    "search_screen_navigation_title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GitHub Finder"
+          }
+        }
+      }
+    },
+    "search_screen_retry_button" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Retry"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Повторить"
+          }
+        }
+      }
+    },
+    "search_screen_search_prompt" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search users"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Поиск пользователей"
+          }
+        }
+      }
+    },
+    "search_screen_sign_out_button" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign out"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Выйти"
           }
         }
       }

@@ -34,17 +34,18 @@ enum GitHubError: LocalizedError, Equatable {
     var errorDescription: String? {
         switch self {
         case .network:
-            return String(localized: "Couldn't reach GitHub. Check your internet connection.")
+            return String(localized: "error_network_text")
         case .unauthorized:
-            return String(localized: "Your GitHub session has expired. Please sign in again.")
+            return String(localized: "error_session_expired_text")
         case .rateLimited:
-            return String(localized: "GitHub rate limit exceeded. Try again later.")
+            return String(localized: "error_rate_limit_text")
         case .notFound:
-            return String(localized: "User not found.")
+            return String(localized: "error_user_not_found_text")
         case .http(let code):
-            return String(localized: "GitHub server error (code \(code)).")
+            return String(localized: "error_server_text",
+                          defaultValue: "GitHub server error (code \(code)).")
         case .decoding:
-            return String(localized: "Couldn't process the server response.")
+            return String(localized: "error_decoding_text")
         }
     }
 }

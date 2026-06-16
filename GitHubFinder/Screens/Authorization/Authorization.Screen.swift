@@ -17,7 +17,7 @@ extension Authorization {
 
         var body: some View {
             content
-                .navigationTitle("Authorization")
+                .navigationTitle("authorization_screen_navigation_title")
         }
     }
 }
@@ -45,10 +45,10 @@ private extension Authorization.Screen {
             Image(systemName: "person.badge.key")
                 .font(.system(size: 48))
                 .foregroundStyle(.secondary)
-            Text("Sign in with your GitHub account to raise the rate limit and access more data.")
+            Text("authorization_screen_intro_text")
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.secondary)
-            Button("Sign in with GitHub") { model.signIn() }
+            Button("authorization_screen_sign_in_button") { model.signIn() }
                 .buttonStyle(.borderedProminent)
         }
         .padding()
@@ -57,15 +57,15 @@ private extension Authorization.Screen {
 
     func waiting(userCode: String, url: URL) -> some View {
         VStack(spacing: 16) {
-            Text("Enter this code on GitHub:")
+            Text("authorization_screen_enter_code_text")
                 .foregroundStyle(.secondary)
-            Text(userCode)
+            Text(verbatim: userCode)
                 .font(.system(.largeTitle, design: .monospaced).weight(.bold))
                 .textSelection(.enabled)
-            Link("Open github.com/login/device", destination: url)
+            Link("authorization_screen_open_device_link", destination: url)
                 .buttonStyle(.borderedProminent)
             ProgressView()
-            Button("Cancel", role: .cancel) { model.cancel() }
+            Button("authorization_screen_cancel_button", role: .cancel) { model.cancel() }
         }
         .padding()
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -73,19 +73,19 @@ private extension Authorization.Screen {
 
     var authorized: some View {
         ContentUnavailableView {
-            Label("Signed in", systemImage: "checkmark.seal")
+            Label("authorization_screen_signed_in_title", systemImage: "checkmark.seal")
         } description: {
-            Text("You're authorized with GitHub.")
+            Text("authorization_screen_signed_in_text")
         }
     }
 
     func failed(_ message: String) -> some View {
         ContentUnavailableView {
-            Label("Sign-in failed", systemImage: "exclamationmark.triangle")
+            Label("authorization_screen_error_view_title", systemImage: "exclamationmark.triangle")
         } description: {
             Text(message)
         } actions: {
-            Button("Try again") { model.signIn() }
+            Button("authorization_screen_try_again_button") { model.signIn() }
         }
     }
 }
