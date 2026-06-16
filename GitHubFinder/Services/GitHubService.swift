@@ -13,7 +13,7 @@ protocol GitHubServicing: Sendable {
     func repositories(login: String) async throws -> [Repository]
 }
 
-enum GitHubError: LocalizedError {
+enum GitHubError: LocalizedError, Equatable {
     case network
     case rateLimited
     case notFound
