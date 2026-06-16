@@ -99,5 +99,5 @@ private extension Profile.Screen {
 }
 
 #Preview {
-    Profile.view(login: "Test")
+    Profile.view(login: "Test", onUnauthorized: {})
 }

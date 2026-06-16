@@ -147,6 +147,16 @@
         }
       }
     },
+    "Your GitHub session has expired. Please sign in again." : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сессия GitHub истекла. Войдите снова."
+          }
+        }
+      }
+    },
     "Couldn't load profile" : {
       "localizations" : {
         "ru" : {

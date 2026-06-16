@@ -132,4 +132,18 @@ struct SearchViewModelTests {
 
         #expect(service.requestedPages == [1])
     }
+
+    @Test("401 при поиске → onSignOut")
+    func unauthorizedTriggersSignOut() async throws {
+        let service = MockGitHubService()
+        service.searchUsersResult = .failure(GitHubError.unauthorized)
+        var didSignOut = false
+        let model = Search.ViewModel(service: service, onSignOut: { didSignOut = true })
+
+        model.query = "oct"
+        model.search()
+        try await waitUntil { didSignOut }
+
+        #expect(didSignOut)
+    }
 }

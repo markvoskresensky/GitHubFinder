@@ -24,12 +24,14 @@ extension Profile {
         private(set) var isLoadingMore = false
 
         private let service: GitHubServicing
+        private let onUnauthorized: () -> Void
         private var page = 1
         private var hasMore = false
 
-        init(login: String, service: GitHubServicing) {
+        init(login: String, service: GitHubServicing, onUnauthorized: @escaping () -> Void) {
             self.login = login
             self.service = service
+            self.onUnauthorized = onUnauthorized
         }
 
         func load() async {
@@ -45,6 +47,10 @@ extension Profile {
                 page = 1
                 state = .loaded
             } catch {
+                if (error as? GitHubError) == .unauthorized {
+                    onUnauthorized()
+                    return
+                }
                 state = .failed(error.localizedDescription)
             }
         }
@@ -69,6 +75,10 @@ private extension Profile.ViewModel {
             page = nextPage
             hasMore = result.hasMore
         } catch {
+            if (error as? GitHubError) == .unauthorized {
+                onUnauthorized()
+                return
+            }
             hasMore = false
         }
     }

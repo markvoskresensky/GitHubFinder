@@ -77,4 +77,14 @@ struct GitHubServiceTests {
             _ = try await service.user(login: "ghost")
         }
     }
+
+    @Test("401 → unauthorized")
+    func unauthorizedOn401() async throws {
+        MockURLProtocol.requestHandler = { _ in (httpResponse(status: 401), Data()) }
+        let service = GitHubService(session: .stubbed(), tokenStore: MockTokenStore())
+
+        await #expect(throws: GitHubError.unauthorized) {
+            _ = try await service.user(login: "octocat")
+        }
+    }
 }

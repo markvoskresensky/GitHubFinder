@@ -23,7 +23,7 @@ extension Search {
                     .onSubmit(of: .search) { model.search() }
                     .onChange(of: model.query) { model.debouncedSearch() }
                     .navigationDestination(for: GitHubUser.self) { user in
-                        Profile.view(login: user.login)
+                        Profile.view(login: user.login, onUnauthorized: { model.signOut() })
                     }
                     .toolbar {
                         ToolbarItem(placement: .topBarTrailing) {

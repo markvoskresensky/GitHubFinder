@@ -20,7 +20,7 @@ struct ProfileViewModelTests {
         service.repositoriesResult = .success(
             RepositoriesPage(repos: [TestData.repo(id: 1, name: "Hello", stars: 3)], hasMore: false)
         )
-        let model = Profile.ViewModel(login: "octocat", service: service)
+        let model = Profile.ViewModel(login: "octocat", service: service, onUnauthorized: {})
 
         await model.load()
 
@@ -46,7 +46,7 @@ struct ProfileViewModelTests {
                 hasMore: false
             )
         )
-        let model = Profile.ViewModel(login: "octocat", service: service)
+        let model = Profile.ViewModel(login: "octocat", service: service, onUnauthorized: {})
 
         await model.load()
 
@@ -64,7 +64,7 @@ struct ProfileViewModelTests {
                 return .success(RepositoriesPage(repos: [TestData.repo(id: 2, name: "r2", stars: 2)], hasMore: false))
             }
         }
-        let model = Profile.ViewModel(login: "octocat", service: service)
+        let model = Profile.ViewModel(login: "octocat", service: service, onUnauthorized: {})
 
         await model.load()
         #expect(model.repositories.map(\.name) == ["r1"])
@@ -82,7 +82,7 @@ struct ProfileViewModelTests {
         service.repositoriesResult = .success(
             RepositoriesPage(repos: [TestData.repo(id: 1, name: "r1", stars: 1)], hasMore: false)
         )
-        let model = Profile.ViewModel(login: "octocat", service: service)
+        let model = Profile.ViewModel(login: "octocat", service: service, onUnauthorized: {})
 
         await model.load()
         model.loadMoreIfNeeded(currentItem: model.repositories[0])
@@ -95,7 +95,7 @@ struct ProfileViewModelTests {
     func failureGivesFailedState() async {
         let service = MockGitHubService()
         service.userResult = .failure(GitHubError.notFound)
-        let model = Profile.ViewModel(login: "ghost", service: service)
+        let model = Profile.ViewModel(login: "ghost", service: service, onUnauthorized: {})
 
         await model.load()
 
@@ -105,11 +105,23 @@ struct ProfileViewModelTests {
     @Test("login прокидывается в сервис")
     func passesLoginToService() async {
         let service = MockGitHubService()
-        let model = Profile.ViewModel(login: "torvalds", service: service)
+        let model = Profile.ViewModel(login: "torvalds", service: service, onUnauthorized: {})
 
         await model.load()
 
         #expect(model.login == "torvalds")
         #expect(service.requestedUserLogins == ["torvalds"])
+    }
+
+    @Test("401 при загрузке → onUnauthorized")
+    func unauthorizedTriggersSignOut() async {
+        let service = MockGitHubService()
+        service.userResult = .failure(GitHubError.unauthorized)
+        var didSignOut = false
+        let model = Profile.ViewModel(login: "octocat", service: service, onUnauthorized: { didSignOut = true })
+
+        await model.load()
+
+        #expect(didSignOut)
     }
 }

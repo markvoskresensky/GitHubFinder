@@ -89,6 +89,10 @@ private extension Search.ViewModel {
         } catch is CancellationError {
         } catch {
             guard !Task.isCancelled else { return }
+            if (error as? GitHubError) == .unauthorized {
+                onSignOut()
+                return
+            }
             users = []
             state = .failed(error.localizedDescription)
         }
@@ -105,6 +109,10 @@ private extension Search.ViewModel {
             page = nextPage
             hasMore = result.hasMore
         } catch {
+            if (error as? GitHubError) == .unauthorized {
+                onSignOut()
+                return
+            }
             hasMore = false
         }
     }

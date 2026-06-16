@@ -25,6 +25,7 @@ protocol GitHubServicing: Sendable {
 
 enum GitHubError: LocalizedError, Equatable {
     case network
+    case unauthorized
     case rateLimited
     case notFound
     case http(Int)
@@ -34,6 +35,8 @@ enum GitHubError: LocalizedError, Equatable {
         switch self {
         case .network:
             return String(localized: "Couldn't reach GitHub. Check your internet connection.")
+        case .unauthorized:
+            return String(localized: "Your GitHub session has expired. Please sign in again.")
         case .rateLimited:
             return String(localized: "GitHub rate limit exceeded. Try again later.")
         case .notFound:
@@ -123,6 +126,8 @@ private extension GitHubService {
         switch http.statusCode {
         case 200...299:
             break
+        case 401:
+            throw GitHubError.unauthorized
         case 403, 429:
             throw GitHubError.rateLimited
         case 404:
