@@ -23,10 +23,12 @@ extension Search {
         private(set) var state: State = .idle
 
         private let service: GitHubServicing
+        private let onSignOut: () -> Void
         private var searchTask: Task<Void, Never>?
 
-        init(service: GitHubServicing) {
+        init(service: GitHubServicing, onSignOut: @escaping () -> Void) {
             self.service = service
+            self.onSignOut = onSignOut
         }
 
         func search() {
@@ -35,6 +37,10 @@ extension Search {
 
         func debouncedSearch() {
             schedule(debounced: true)
+        }
+
+        func signOut() {
+            onSignOut()
         }
     }
 }

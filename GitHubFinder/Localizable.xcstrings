@@ -67,6 +67,16 @@
         }
       }
     },
+    "Sign out" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Выйти"
+          }
+        }
+      }
+    },
     "Sign in with GitHub" : {
       "localizations" : {
         "ru" : {

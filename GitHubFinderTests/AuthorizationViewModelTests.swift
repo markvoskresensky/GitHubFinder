@@ -15,21 +15,31 @@ struct AuthorizationViewModelTests {
 
     @Test("Начальное состояние — idle")
     func initialStateIsIdle() {
-        let model = Authorization.ViewModel(service: MockGitHubAuthService(), tokenStore: MockTokenStore())
+        let model = Authorization.ViewModel(
+            service: MockGitHubAuthService(),
+            tokenStore: MockTokenStore(),
+            onAuthorized: {}
+        )
         #expect(model.state.isIdle)
     }
 
-    @Test("Успешный вход → authorized и токен сохранён")
-    func successfulSignInSavesToken() async throws {
+    @Test("Успешный вход → authorized, токен сохранён, колбэк вызван")
+    func successfulSignInSavesTokenAndNotifies() async throws {
         let service = MockGitHubAuthService()
         service.tokenResult = .success("gho_abc123")
         let store = MockTokenStore()
-        let model = Authorization.ViewModel(service: service, tokenStore: store)
+        var didNotify = false
+        let model = Authorization.ViewModel(
+            service: service,
+            tokenStore: store,
+            onAuthorized: { didNotify = true }
+        )
 
         model.signIn()
         try await waitUntil { model.state.isAuthorized }
 
         #expect(store.savedToken == "gho_abc123")
+        #expect(didNotify)
     }
 
     @Test("Во время ожидания показывается код пользователя")
@@ -45,7 +55,11 @@ struct AuthorizationViewModelTests {
             )
         )
         service.hangOnPoll = true
-        let model = Authorization.ViewModel(service: service, tokenStore: MockTokenStore())
+        let model = Authorization.ViewModel(
+            service: service,
+            tokenStore: MockTokenStore(),
+            onAuthorized: {}
+        )
 
         model.signIn()
         try await waitUntil { model.state.waitingUserCode != nil }
@@ -57,7 +71,11 @@ struct AuthorizationViewModelTests {
     func cancelReturnsToIdle() async throws {
         let service = MockGitHubAuthService()
         service.hangOnPoll = true
-        let model = Authorization.ViewModel(service: service, tokenStore: MockTokenStore())
+        let model = Authorization.ViewModel(
+            service: service,
+            tokenStore: MockTokenStore(),
+            onAuthorized: {}
+        )
 
         model.signIn()
         try await waitUntil { model.state.waitingUserCode != nil }
@@ -71,7 +89,11 @@ struct AuthorizationViewModelTests {
         let service = MockGitHubAuthService()
         service.deviceCodeResult = .failure(GitHubAuthError.deviceFlowDisabled)
         let store = MockTokenStore()
-        let model = Authorization.ViewModel(service: service, tokenStore: store)
+        let model = Authorization.ViewModel(
+            service: service,
+            tokenStore: store,
+            onAuthorized: {}
+        )
 
         model.signIn()
         try await waitUntil { model.state.failureMessage != nil }
@@ -85,7 +107,11 @@ struct AuthorizationViewModelTests {
         let service = MockGitHubAuthService()
         service.tokenResult = .failure(GitHubAuthError.accessDenied)
         let store = MockTokenStore()
-        let model = Authorization.ViewModel(service: service, tokenStore: store)
+        let model = Authorization.ViewModel(
+            service: service,
+            tokenStore: store,
+            onAuthorized: {}
+        )
 
         model.signIn()
         try await waitUntil { model.state.failureMessage != nil }

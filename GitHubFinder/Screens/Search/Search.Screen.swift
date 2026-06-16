@@ -25,6 +25,13 @@ extension Search {
                     .navigationDestination(for: GitHubUser.self) { user in
                         Profile.view(login: user.login)
                     }
+                    .toolbar {
+                        ToolbarItem(placement: .topBarTrailing) {
+                            Button("Sign out", systemImage: "rectangle.portrait.and.arrow.right") {
+                                model.signOut()
+                            }
+                        }
+                    }
             }
         }
     }
@@ -73,5 +80,5 @@ private extension Search.Screen {
 }
 
 #Preview {
-    Search.view()
+    Search.view(onSignOut: {})
 }

@@ -11,7 +11,7 @@ import SwiftUI
 struct GitHubFinderApp: App {
     var body: some Scene {
         WindowGroup {
-            Search.view()
+            Root.view()
         }
     }
 }

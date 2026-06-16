@@ -10,8 +10,8 @@ import SwiftUI
 enum Authorization {}
 
 extension Authorization {
-    static func view() -> some View {
-        let model = ViewModel(service: GitHubAuthService(), tokenStore: TokenStore())
+    static func view(onAuthorized: @escaping () -> Void) -> some View {
+        let model = ViewModel(service: GitHubAuthService(), tokenStore: TokenStore(), onAuthorized: onAuthorized)
         return Authorization.Screen(model: model)
     }
 }

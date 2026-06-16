@@ -15,14 +15,14 @@ struct SearchViewModelTests {
 
     @Test("Начальное состояние — idle")
     func initialStateIsIdle() {
-        let model = Search.ViewModel(service: MockGitHubService())
+        let model = Search.ViewModel(service: MockGitHubService(), onSignOut: {})
         #expect(model.state.isIdle)
     }
 
     @Test("Пустой запрос не запускает поиск и оставляет idle")
     func emptyQueryDoesNotSearch() async throws {
         let service = MockGitHubService()
-        let model = Search.ViewModel(service: service)
+        let model = Search.ViewModel(service: service, onSignOut: {})
 
         model.query = "   "
         model.search()
@@ -39,7 +39,7 @@ struct SearchViewModelTests {
             TestData.user(id: 1, login: "octocat"),
             TestData.user(id: 2, login: "hubot")
         ])
-        let model = Search.ViewModel(service: service)
+        let model = Search.ViewModel(service: service, onSignOut: {})
 
         model.query = "oct"
         model.search()
@@ -54,7 +54,7 @@ struct SearchViewModelTests {
     func emptyResultsGiveEmptyState() async throws {
         let service = MockGitHubService()
         service.searchUsersResult = .success([])
-        let model = Search.ViewModel(service: service)
+        let model = Search.ViewModel(service: service, onSignOut: {})
 
         model.query = "zzzznotexist"
         model.search()
@@ -67,7 +67,7 @@ struct SearchViewModelTests {
     func failureGivesFailedState() async throws {
         let service = MockGitHubService()
         service.searchUsersResult = .failure(GitHubError.rateLimited)
-        let model = Search.ViewModel(service: service)
+        let model = Search.ViewModel(service: service, onSignOut: {})
 
         model.query = "oct"
         model.search()
@@ -80,7 +80,7 @@ struct SearchViewModelTests {
     func queryIsTrimmed() async throws {
         let service = MockGitHubService()
         service.searchUsersResult = .success([TestData.user()])
-        let model = Search.ViewModel(service: service)
+        let model = Search.ViewModel(service: service, onSignOut: {})
 
         model.query = "   octocat   "
         model.search()
