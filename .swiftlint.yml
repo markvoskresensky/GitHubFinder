@@ -1,5 +1,8 @@
 # SwiftLint configuration — standard (default) rules.
 
+nesting:
+  type_level: 4
+
 identifier_name:
   excluded:
     - id # required by Identifiable

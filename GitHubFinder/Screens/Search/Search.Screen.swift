@@ -10,7 +10,7 @@ import SwiftUI
 extension Search {
     struct Screen: View {
         @State private var model: ViewModel
-        
+
         init(model: ViewModel) {
             self._model = .init(initialValue: model)
         }
