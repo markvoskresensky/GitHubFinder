@@ -71,3 +71,7 @@ private extension Search.Screen {
         }
     }
 }
+
+#Preview {
+    Search.view()
+}

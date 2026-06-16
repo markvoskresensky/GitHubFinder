@@ -1,0 +1,9 @@
+# SwiftLint configuration — standard (default) rules.
+
+identifier_name:
+  excluded:
+    - id # required by Identifiable
+
+excluded:
+  - .build
+  - DerivedData

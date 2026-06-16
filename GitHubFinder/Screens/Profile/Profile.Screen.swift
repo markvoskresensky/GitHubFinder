@@ -87,3 +87,7 @@ private extension Profile.Screen {
         }
     }
 }
+
+#Preview {
+    Profile.view(login: "Test")
+}
