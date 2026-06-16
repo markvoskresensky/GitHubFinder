@@ -38,10 +38,12 @@ enum GitHubError: LocalizedError {
 
 struct GitHubService: GitHubServicing {
     private let session: URLSession
+    private let tokenStore: TokenStoring
     private let baseURL = URL(string: "https://api.github.com")!
 
-    init(session: URLSession = .shared) {
+    init(session: URLSession = .shared, tokenStore: TokenStoring) {
         self.session = session
+        self.tokenStore = tokenStore
     }
 
     func searchUsers(query: String) async throws -> [GitHubUser] {
@@ -81,6 +83,9 @@ private extension GitHubService {
     func get<T: Decodable>(_ url: URL) async throws -> T {
         var request = URLRequest(url: url)
         request.setValue("application/vnd.github+json", forHTTPHeaderField: "Accept")
+        if let token = tokenStore.read() {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
 
         let data: Data
         let response: URLResponse

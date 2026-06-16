@@ -11,7 +11,7 @@ enum Profile {}
 
 extension Profile {
     static func view(login: String) -> some View {
-        let model = ViewModel(login: login, service: GitHubService())
+        let model = ViewModel(login: login, service: GitHubService(tokenStore: TokenStore()))
         return Profile.Screen(model: model)
     }
 }

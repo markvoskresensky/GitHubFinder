@@ -11,7 +11,7 @@ enum Search {}
 
 extension Search {
     static func view(onSignOut: @escaping () -> Void) -> some View {
-        let viewModel = Search.ViewModel(service: GitHubService(), onSignOut: onSignOut)
+        let viewModel = Search.ViewModel(service: GitHubService(tokenStore: TokenStore()), onSignOut: onSignOut)
         return Search.Screen(model: viewModel)
     }
 }
