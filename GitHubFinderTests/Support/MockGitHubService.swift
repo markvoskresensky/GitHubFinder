@@ -12,12 +12,14 @@ final class MockGitHubService: GitHubServicing, @unchecked Sendable {
     var searchUsersResult: Result<SearchUsersPage, Error> = .success(SearchUsersPage(users: [], hasMore: false))
     var searchUsersHandler: (@Sendable (String, Int) -> Result<SearchUsersPage, Error>)?
     var userResult: Result<UserDetail, Error> = .success(TestData.userDetail())
-    var repositoriesResult: Result<[Repository], Error> = .success([])
+    var repositoriesResult: Result<RepositoriesPage, Error> = .success(RepositoriesPage(repos: [], hasMore: false))
+    var repositoriesHandler: (@Sendable (String, Int) -> Result<RepositoriesPage, Error>)?
 
     private(set) var searchUsersQueries: [String] = []
     private(set) var requestedPages: [Int] = []
     private(set) var requestedUserLogins: [String] = []
     private(set) var requestedRepoLogins: [String] = []
+    private(set) var requestedRepoPages: [Int] = []
 
     func searchUsers(query: String, page: Int) async throws -> SearchUsersPage {
         searchUsersQueries.append(query)
@@ -33,8 +35,12 @@ final class MockGitHubService: GitHubServicing, @unchecked Sendable {
         return try userResult.get()
     }
 
-    func repositories(login: String) async throws -> [Repository] {
+    func repositories(login: String, page: Int) async throws -> RepositoriesPage {
         requestedRepoLogins.append(login)
+        requestedRepoPages.append(page)
+        if let handler = repositoriesHandler {
+            return try handler(login, page).get()
+        }
         return try repositoriesResult.get()
     }
 }

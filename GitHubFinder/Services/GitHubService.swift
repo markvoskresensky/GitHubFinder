@@ -12,10 +12,15 @@ struct SearchUsersPage: Sendable {
     let hasMore: Bool
 }
 
+struct RepositoriesPage: Sendable {
+    let repos: [Repository]
+    let hasMore: Bool
+}
+
 protocol GitHubServicing: Sendable {
     func searchUsers(query: String, page: Int) async throws -> SearchUsersPage
     func user(login: String) async throws -> UserDetail
-    func repositories(login: String) async throws -> [Repository]
+    func repositories(login: String, page: Int) async throws -> RepositoriesPage
 }
 
 enum GitHubError: LocalizedError, Equatable {
@@ -73,15 +78,17 @@ struct GitHubService: GitHubServicing {
         return try await get(url)
     }
 
-    func repositories(login: String) async throws -> [Repository] {
+    func repositories(login: String, page: Int) async throws -> RepositoriesPage {
         var components = URLComponents(url: baseURL.appendingPathComponent("users/\(login)/repos"),
                                        resolvingAgainstBaseURL: false)!
         components.queryItems = [
             URLQueryItem(name: "sort", value: "updated"),
-            URLQueryItem(name: "per_page", value: "100")
+            URLQueryItem(name: "per_page", value: "\(perPage)"),
+            URLQueryItem(name: "page", value: "\(page)")
         ]
         guard let url = components.url else { throw GitHubError.network }
-        return try await get(url)
+        let repos: [Repository] = try await get(url)
+        return RepositoriesPage(repos: repos, hasMore: repos.count == perPage)
     }
 }
 
