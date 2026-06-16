@@ -34,7 +34,11 @@ extension Profile {
                     if let language = repository.language {
                         Label(language, systemImage: "circle.fill")
                     }
-                    Label("\(repository.stargazersCount)", systemImage: "star")
+                    Label {
+                        Text(repository.stargazersCount, format: .number)
+                    } icon: {
+                        Image(systemName: "star")
+                    }
                 }
                 .font(.caption)
                 .foregroundStyle(.secondary)

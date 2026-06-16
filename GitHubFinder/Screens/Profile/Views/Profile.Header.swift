@@ -20,7 +20,7 @@ extension Profile {
                         Text(name)
                             .font(.title2.bold())
                     }
-                    Text("@\(user.login)")
+                    Text(verbatim: "@\(user.login)")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }
@@ -37,7 +37,7 @@ extension Profile {
 
                 if let url = user.htmlURL {
                     Link(destination: url) {
-                        Label("Open on GitHub", systemImage: "arrow.up.right.square")
+                        Label("profile_screen_open_on_github_button", systemImage: "arrow.up.right.square")
                     }
                     .buttonStyle(.bordered)
                 }
@@ -72,9 +72,9 @@ private extension Profile.Header {
 
     var stats: some View {
         HStack(spacing: 24) {
-            stat(value: user.publicRepos, title: "Repositories")
-            stat(value: user.followers, title: "Followers")
-            stat(value: user.following, title: "Following")
+            stat(value: user.publicRepos, title: "profile_screen_stat_repositories_title")
+            stat(value: user.followers, title: "profile_screen_stat_followers_title")
+            stat(value: user.following, title: "profile_screen_stat_following_title")
         }
         .padding(.top, 4)
     }

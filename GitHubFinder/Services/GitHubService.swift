@@ -7,14 +7,25 @@
 
 import Foundation
 
-protocol GitHubServicing: Sendable {
-    func searchUsers(query: String) async throws -> [GitHubUser]
-    func user(login: String) async throws -> UserDetail
-    func repositories(login: String) async throws -> [Repository]
+struct SearchUsersPage: Sendable {
+    let users: [GitHubUser]
+    let hasMore: Bool
 }
 
-enum GitHubError: LocalizedError {
+struct RepositoriesPage: Sendable {
+    let repos: [Repository]
+    let hasMore: Bool
+}
+
+protocol GitHubServicing: Sendable {
+    func searchUsers(query: String, page: Int) async throws -> SearchUsersPage
+    func user(login: String) async throws -> UserDetail
+    func repositories(login: String, page: Int) async throws -> RepositoriesPage
+}
+
+enum GitHubError: LocalizedError, Equatable {
     case network
+    case unauthorized
     case rateLimited
     case notFound
     case http(Int)
@@ -23,37 +34,47 @@ enum GitHubError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .network:
-            return String(localized: "Couldn't reach GitHub. Check your internet connection.")
+            return String(localized: "error_network_text")
+        case .unauthorized:
+            return String(localized: "error_session_expired_text")
         case .rateLimited:
-            return String(localized: "GitHub rate limit exceeded. Try again later.")
+            return String(localized: "error_rate_limit_text")
         case .notFound:
-            return String(localized: "User not found.")
+            return String(localized: "error_user_not_found_text")
         case .http(let code):
-            return String(localized: "GitHub server error (code \(code)).")
+            return String(localized: "error_server_text",
+                          defaultValue: "GitHub server error (code \(code)).")
         case .decoding:
-            return String(localized: "Couldn't process the server response.")
+            return String(localized: "error_decoding_text")
         }
     }
 }
 
 struct GitHubService: GitHubServicing {
     private let session: URLSession
+    private let tokenStore: TokenStoring
     private let baseURL = URL(string: "https://api.github.com")!
+    private let perPage = 30
+    private let maxSearchResults = 1000
 
-    init(session: URLSession = .shared) {
+    init(session: URLSession = .shared, tokenStore: TokenStoring) {
         self.session = session
+        self.tokenStore = tokenStore
     }
 
-    func searchUsers(query: String) async throws -> [GitHubUser] {
+    func searchUsers(query: String, page: Int) async throws -> SearchUsersPage {
         var components = URLComponents(url: baseURL.appendingPathComponent("search/users"),
                                        resolvingAgainstBaseURL: false)!
         components.queryItems = [
             URLQueryItem(name: "q", value: query),
-            URLQueryItem(name: "per_page", value: "30")
+            URLQueryItem(name: "per_page", value: "\(perPage)"),
+            URLQueryItem(name: "page", value: "\(page)")
         ]
         guard let url = components.url else { throw GitHubError.network }
         let response: SearchUsersResponse = try await get(url)
-        return response.items
+        let available = min(response.totalCount, maxSearchResults)
+        let hasMore = page * perPage < available
+        return SearchUsersPage(users: response.items, hasMore: hasMore)
     }
 
     func user(login: String) async throws -> UserDetail {
@@ -61,26 +82,37 @@ struct GitHubService: GitHubServicing {
         return try await get(url)
     }
 
-    func repositories(login: String) async throws -> [Repository] {
+    func repositories(login: String, page: Int) async throws -> RepositoriesPage {
         var components = URLComponents(url: baseURL.appendingPathComponent("users/\(login)/repos"),
                                        resolvingAgainstBaseURL: false)!
         components.queryItems = [
             URLQueryItem(name: "sort", value: "updated"),
-            URLQueryItem(name: "per_page", value: "100")
+            URLQueryItem(name: "per_page", value: "\(perPage)"),
+            URLQueryItem(name: "page", value: "\(page)")
         ]
         guard let url = components.url else { throw GitHubError.network }
-        return try await get(url)
+        let repos: [Repository] = try await get(url)
+        return RepositoriesPage(repos: repos, hasMore: repos.count == perPage)
     }
 }
 
 private extension GitHubService {
     struct SearchUsersResponse: Decodable {
+        let totalCount: Int
         let items: [GitHubUser]
+
+        enum CodingKeys: String, CodingKey {
+            case totalCount = "total_count"
+            case items
+        }
     }
 
     func get<T: Decodable>(_ url: URL) async throws -> T {
         var request = URLRequest(url: url)
         request.setValue("application/vnd.github+json", forHTTPHeaderField: "Accept")
+        if let token = tokenStore.read() {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
 
         let data: Data
         let response: URLResponse
@@ -95,6 +127,8 @@ private extension GitHubService {
         switch http.statusCode {
         case 200...299:
             break
+        case 401:
+            throw GitHubError.unauthorized
         case 403, 429:
             throw GitHubError.rateLimited
         case 404:

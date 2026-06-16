@@ -49,14 +49,25 @@ private extension Profile.Screen {
             }
 
             if model.repositories.isEmpty {
-                Section("Repositories") {
-                    Text("This user has no public repositories.")
+                Section("profile_screen_repositories_section_title") {
+                    Text("profile_screen_no_repositories_text")
                         .foregroundStyle(.secondary)
                 }
             } else {
-                Section("Repositories (\(model.repositories.count))") {
+                Section(String(localized: "profile_screen_repositories_count_section_title",
+                               defaultValue: "Repositories (\(model.repositories.count))")) {
                     ForEach(model.repositories) { repository in
                         repositoryLink(repository)
+                            .onAppear { model.loadMoreIfNeeded(currentItem: repository) }
+                    }
+
+                    if model.isLoadingMore {
+                        HStack {
+                            Spacer()
+                            ProgressView()
+                            Spacer()
+                        }
+                        .listRowSeparator(.hidden)
                     }
                 }
             }
@@ -77,13 +88,17 @@ private extension Profile.Screen {
 
     func errorView(_ message: String) -> some View {
         ContentUnavailableView {
-            Label("Couldn't load profile", systemImage: "exclamationmark.triangle")
+            Label("profile_screen_error_view_text", systemImage: "exclamationmark.triangle")
         } description: {
             Text(message)
         } actions: {
-            Button("Retry") {
+            Button("profile_screen_retry_button") {
                 Task { await model.load() }
             }
         }
     }
+}
+
+#Preview {
+    Profile.view(login: "Test", onUnauthorized: {})
 }

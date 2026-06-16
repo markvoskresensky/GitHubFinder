@@ -13,16 +13,16 @@ import Foundation
 @Suite("Search.ViewModel")
 struct SearchViewModelTests {
 
-    @Test("Начальное состояние — idle")
+    @Test("Initial state is idle")
     func initialStateIsIdle() {
-        let model = Search.ViewModel(service: MockGitHubService())
+        let model = Search.ViewModel(service: MockGitHubService(), onSignOut: {})
         #expect(model.state.isIdle)
     }
 
-    @Test("Пустой запрос не запускает поиск и оставляет idle")
+    @Test("Empty query does not search and stays idle")
     func emptyQueryDoesNotSearch() async throws {
         let service = MockGitHubService()
-        let model = Search.ViewModel(service: service)
+        let model = Search.ViewModel(service: service, onSignOut: {})
 
         model.query = "   "
         model.search()
@@ -32,29 +32,32 @@ struct SearchViewModelTests {
         #expect(service.searchUsersQueries.isEmpty)
     }
 
-    @Test("Успешный поиск с результатами → loaded")
+    @Test("Successful search with results → loaded")
     func successfulSearchLoadsUsers() async throws {
         let service = MockGitHubService()
-        service.searchUsersResult = .success([
-            TestData.user(id: 1, login: "octocat"),
-            TestData.user(id: 2, login: "hubot")
-        ])
-        let model = Search.ViewModel(service: service)
+        service.searchUsersResult = .success(
+            SearchUsersPage(
+                users: [TestData.user(id: 1, login: "octocat"), TestData.user(id: 2, login: "hubot")],
+                hasMore: false
+            )
+        )
+        let model = Search.ViewModel(service: service, onSignOut: {})
 
         model.query = "oct"
         model.search()
-        try await waitUntil { model.state.users != nil }
+        try await waitUntil { model.state.isLoaded }
 
-        #expect(model.state.users?.count == 2)
-        #expect(model.state.users?.first?.login == "octocat")
+        #expect(model.users.count == 2)
+        #expect(model.users.first?.login == "octocat")
         #expect(service.searchUsersQueries == ["oct"])
+        #expect(service.requestedPages == [1])
     }
 
-    @Test("Поиск без результатов → empty")
+    @Test("Search with no results → empty")
     func emptyResultsGiveEmptyState() async throws {
         let service = MockGitHubService()
-        service.searchUsersResult = .success([])
-        let model = Search.ViewModel(service: service)
+        service.searchUsersResult = .success(SearchUsersPage(users: [], hasMore: false))
+        let model = Search.ViewModel(service: service, onSignOut: {})
 
         model.query = "zzzznotexist"
         model.search()
@@ -63,11 +66,11 @@ struct SearchViewModelTests {
         #expect(model.state.isEmpty)
     }
 
-    @Test("Ошибка сети → failed с человекочитаемым сообщением")
+    @Test("Network error → failed with a readable message")
     func failureGivesFailedState() async throws {
         let service = MockGitHubService()
         service.searchUsersResult = .failure(GitHubError.rateLimited)
-        let model = Search.ViewModel(service: service)
+        let model = Search.ViewModel(service: service, onSignOut: {})
 
         model.query = "oct"
         model.search()
@@ -76,16 +79,71 @@ struct SearchViewModelTests {
         #expect(model.state.failureMessage == GitHubError.rateLimited.errorDescription)
     }
 
-    @Test("Запрос обрезается от пробелов перед отправкой")
+    @Test("Query is trimmed before sending")
     func queryIsTrimmed() async throws {
         let service = MockGitHubService()
-        service.searchUsersResult = .success([TestData.user()])
-        let model = Search.ViewModel(service: service)
+        service.searchUsersResult = .success(SearchUsersPage(users: [TestData.user()], hasMore: false))
+        let model = Search.ViewModel(service: service, onSignOut: {})
 
         model.query = "   octocat   "
         model.search()
-        try await waitUntil { model.state.users != nil }
+        try await waitUntil { model.state.isLoaded }
 
         #expect(service.searchUsersQueries == ["octocat"])
+    }
+
+    @Test("Loading the next page appends users")
+    func loadMoreAppendsNextPage() async throws {
+        let service = MockGitHubService()
+        service.searchUsersHandler = { _, page in
+            switch page {
+            case 1:
+                return .success(SearchUsersPage(users: [TestData.user(id: 1, login: "u1")], hasMore: true))
+            default:
+                return .success(SearchUsersPage(users: [TestData.user(id: 2, login: "u2")], hasMore: false))
+            }
+        }
+        let model = Search.ViewModel(service: service, onSignOut: {})
+
+        model.query = "oct"
+        model.search()
+        try await waitUntil { model.state.isLoaded }
+        #expect(model.users.map(\.login) == ["u1"])
+
+        model.loadMoreIfNeeded(currentItem: model.users[0])
+        try await waitUntil { model.users.count == 2 }
+
+        #expect(model.users.map(\.login) == ["u1", "u2"])
+        #expect(service.requestedPages == [1, 2])
+    }
+
+    @Test("No further loading when there are no more pages")
+    func doesNotLoadMoreWhenNoMorePages() async throws {
+        let service = MockGitHubService()
+        service.searchUsersResult = .success(SearchUsersPage(users: [TestData.user(id: 1, login: "u1")], hasMore: false))
+        let model = Search.ViewModel(service: service, onSignOut: {})
+
+        model.query = "oct"
+        model.search()
+        try await waitUntil { model.state.isLoaded }
+
+        model.loadMoreIfNeeded(currentItem: model.users[0])
+        try await Task.sleep(for: .milliseconds(50))
+
+        #expect(service.requestedPages == [1])
+    }
+
+    @Test("401 during search → onSignOut")
+    func unauthorizedTriggersSignOut() async throws {
+        let service = MockGitHubService()
+        service.searchUsersResult = .failure(GitHubError.unauthorized)
+        var didSignOut = false
+        let model = Search.ViewModel(service: service, onSignOut: { didSignOut = true })
+
+        model.query = "oct"
+        model.search()
+        try await waitUntil { didSignOut }
+
+        #expect(didSignOut)
     }
 }
