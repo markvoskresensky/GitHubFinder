@@ -35,25 +35,28 @@ struct SearchViewModelTests {
     @Test("Успешный поиск с результатами → loaded")
     func successfulSearchLoadsUsers() async throws {
         let service = MockGitHubService()
-        service.searchUsersResult = .success([
-            TestData.user(id: 1, login: "octocat"),
-            TestData.user(id: 2, login: "hubot")
-        ])
+        service.searchUsersResult = .success(
+            SearchUsersPage(
+                users: [TestData.user(id: 1, login: "octocat"), TestData.user(id: 2, login: "hubot")],
+                hasMore: false
+            )
+        )
         let model = Search.ViewModel(service: service, onSignOut: {})
 
         model.query = "oct"
         model.search()
-        try await waitUntil { model.state.users != nil }
+        try await waitUntil { model.state.isLoaded }
 
-        #expect(model.state.users?.count == 2)
-        #expect(model.state.users?.first?.login == "octocat")
+        #expect(model.users.count == 2)
+        #expect(model.users.first?.login == "octocat")
         #expect(service.searchUsersQueries == ["oct"])
+        #expect(service.requestedPages == [1])
     }
 
     @Test("Поиск без результатов → empty")
     func emptyResultsGiveEmptyState() async throws {
         let service = MockGitHubService()
-        service.searchUsersResult = .success([])
+        service.searchUsersResult = .success(SearchUsersPage(users: [], hasMore: false))
         let model = Search.ViewModel(service: service, onSignOut: {})
 
         model.query = "zzzznotexist"
@@ -79,13 +82,54 @@ struct SearchViewModelTests {
     @Test("Запрос обрезается от пробелов перед отправкой")
     func queryIsTrimmed() async throws {
         let service = MockGitHubService()
-        service.searchUsersResult = .success([TestData.user()])
+        service.searchUsersResult = .success(SearchUsersPage(users: [TestData.user()], hasMore: false))
         let model = Search.ViewModel(service: service, onSignOut: {})
 
         model.query = "   octocat   "
         model.search()
-        try await waitUntil { model.state.users != nil }
+        try await waitUntil { model.state.isLoaded }
 
         #expect(service.searchUsersQueries == ["octocat"])
+    }
+
+    @Test("Догрузка следующей страницы добавляет пользователей")
+    func loadMoreAppendsNextPage() async throws {
+        let service = MockGitHubService()
+        service.searchUsersHandler = { _, page in
+            switch page {
+            case 1:
+                return .success(SearchUsersPage(users: [TestData.user(id: 1, login: "u1")], hasMore: true))
+            default:
+                return .success(SearchUsersPage(users: [TestData.user(id: 2, login: "u2")], hasMore: false))
+            }
+        }
+        let model = Search.ViewModel(service: service, onSignOut: {})
+
+        model.query = "oct"
+        model.search()
+        try await waitUntil { model.state.isLoaded }
+        #expect(model.users.map(\.login) == ["u1"])
+
+        model.loadMoreIfNeeded(currentItem: model.users[0])
+        try await waitUntil { model.users.count == 2 }
+
+        #expect(model.users.map(\.login) == ["u1", "u2"])
+        #expect(service.requestedPages == [1, 2])
+    }
+
+    @Test("Догрузки нет, когда страниц больше нет")
+    func doesNotLoadMoreWhenNoMorePages() async throws {
+        let service = MockGitHubService()
+        service.searchUsersResult = .success(SearchUsersPage(users: [TestData.user(id: 1, login: "u1")], hasMore: false))
+        let model = Search.ViewModel(service: service, onSignOut: {})
+
+        model.query = "oct"
+        model.search()
+        try await waitUntil { model.state.isLoaded }
+
+        model.loadMoreIfNeeded(currentItem: model.users[0])
+        try await Task.sleep(for: .milliseconds(50))
+
+        #expect(service.requestedPages == [1])
     }
 }

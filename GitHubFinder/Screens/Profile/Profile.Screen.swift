@@ -57,6 +57,16 @@ private extension Profile.Screen {
                 Section("Repositories (\(model.repositories.count))") {
                     ForEach(model.repositories) { repository in
                         repositoryLink(repository)
+                            .onAppear { model.loadMoreIfNeeded(currentItem: repository) }
+                    }
+
+                    if model.isLoadingMore {
+                        HStack {
+                            Spacer()
+                            ProgressView()
+                            Spacer()
+                        }
+                        .listRowSeparator(.hidden)
                     }
                 }
             }

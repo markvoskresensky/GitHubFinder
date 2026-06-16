@@ -16,33 +16,34 @@ struct GitHubServiceTests {
     func setsAuthorizationHeaderWhenTokenPresent() async throws {
         let store = MockTokenStore()
         store.save("gho_secret")
-        MockURLProtocol.requestHandler = { _ in (httpResponse(status: 200), Data(#"{"items":[]}"#.utf8)) }
+        MockURLProtocol.requestHandler = { _ in (httpResponse(status: 200), Data(#"{"total_count":0,"items":[]}"#.utf8)) }
         let service = GitHubService(session: .stubbed(), tokenStore: store)
 
-        _ = try await service.searchUsers(query: "octocat")
+        _ = try await service.searchUsers(query: "octocat", page: 1)
 
         #expect(MockURLProtocol.lastRequest?.value(forHTTPHeaderField: "Authorization") == "Bearer gho_secret")
     }
 
     @Test("Без токена заголовок Authorization не ставится")
     func omitsAuthorizationHeaderWithoutToken() async throws {
-        MockURLProtocol.requestHandler = { _ in (httpResponse(status: 200), Data(#"{"items":[]}"#.utf8)) }
+        MockURLProtocol.requestHandler = { _ in (httpResponse(status: 200), Data(#"{"total_count":0,"items":[]}"#.utf8)) }
         let service = GitHubService(session: .stubbed(), tokenStore: MockTokenStore())
 
-        _ = try await service.searchUsers(query: "octocat")
+        _ = try await service.searchUsers(query: "octocat", page: 1)
 
         #expect(MockURLProtocol.lastRequest?.value(forHTTPHeaderField: "Authorization") == nil)
     }
 
-    @Test("searchUsers парсит результаты")
+    @Test("searchUsers парсит результаты и определяет hasMore")
     func searchUsersParsesItems() async throws {
-        let json = #"{"items":[{"id":1,"login":"octocat","avatar_url":"https://example.com/a.png","html_url":"https://github.com/octocat"}]}"#
+        let json = #"{"total_count":50,"items":[{"id":1,"login":"octocat","avatar_url":"https://example.com/a.png","html_url":"https://github.com/octocat"}]}"#
         MockURLProtocol.requestHandler = { _ in (httpResponse(status: 200), Data(json.utf8)) }
         let service = GitHubService(session: .stubbed(), tokenStore: MockTokenStore())
 
-        let users = try await service.searchUsers(query: "oct")
+        let result = try await service.searchUsers(query: "oct", page: 1)
 
-        #expect(users.map(\.login) == ["octocat"])
+        #expect(result.users.map(\.login) == ["octocat"])
+        #expect(result.hasMore)
     }
 
     @Test("user парсит профиль")
